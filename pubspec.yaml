@@ -60,3 +60,6 @@ flutter:
           weight: 400
         - asset: assets/fonts/Anakotmai-Bold.ttf
           weight: 700
+
+  assets:
+    - assets/images/

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:nsm2021_smartwheelchair_mobileapp/screens/aboutPage.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:package_info/package_info.dart';
 
@@ -31,18 +32,6 @@ class _MyHomePageState extends State<MyHomePage> {
   final String _sendToRickURL = "https://www.youtube.com/watch?v=j8PxqgliIno";
 
   @override
-  void initState() {
-    super.initState();
-    printVersionNumber();
-  }
-
-  void printVersionNumber() async {
-    PackageInfo packageInfo = await PackageInfo.fromPlatform();
-    String _version = packageInfo.version;
-    print("The Version is $_version");
-  }
-
-  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -53,7 +42,18 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ),
         actions: [
-          IconButton(onPressed: () {}, icon: Icon(Icons.info)),
+          IconButton(
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) {
+                      return AboutPage();
+                    },
+                  ),
+                );
+              },
+              icon: Icon(Icons.info)),
         ],
       ),
       // * FONT TEST
