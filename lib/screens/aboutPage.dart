@@ -10,6 +10,9 @@ class AboutPage extends StatefulWidget {
 }
 
 class _AboutPageState extends State<AboutPage> {
+  final double _appNameFontSize = 22;
+  final double _appVersionFontSize = 18;
+
   @override
   void initState() {
     super.initState();
@@ -42,7 +45,8 @@ class _AboutPageState extends State<AboutPage> {
             ),
             Text(
               "Wheel Chair Controller",
-              style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                  fontSize: _appNameFontSize, fontWeight: FontWeight.bold),
               textAlign: TextAlign.center,
             ),
             FutureBuilder(
@@ -51,13 +55,14 @@ class _AboutPageState extends State<AboutPage> {
                 if (snapshot.connectionState == ConnectionState.done) {
                   var result = snapshot.data;
                   return Text(
-                    "Version: " + result,
-                    style: TextStyle(fontSize: 18),
+                    "เวอร์ชั่น " + result,
+                    style: TextStyle(fontSize: _appVersionFontSize),
                   );
                 }
-                return Text("Version: Loading...");
+                return Text("กำลังโหลดข้อมูลเวอร์ชั่น",
+                    style: TextStyle(fontSize: _appVersionFontSize));
               },
-            )
+            ),
           ],
         ));
   }
