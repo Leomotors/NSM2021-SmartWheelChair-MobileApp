@@ -124,16 +124,25 @@ class _DiscoveryPage extends State<DiscoveryPage> {
                       try {
                         bool bonded = false;
                         if (device.isBonded) {
-                          print('Unbonding from ${device.name}...');
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text("กำลังเลิกจับคู่ ${device.name}..."),
+                          ));
                           await FlutterBluetoothSerial.instance
                               .removeDeviceBondWithAddress(address);
-                          print('Unbonding from ${device.name} has succed');
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(
+                                "เลิกจับคู่ ${device.name} สำเร็จ"),
+                          ));
                         } else {
-                          print('Bonding with ${device.name}...');
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text("กำลังจับคู่ ${device.name}..."),
+                          ));
                           bonded = (await FlutterBluetoothSerial.instance
                               .bondDeviceAtAddress(address))!;
-                          print(
-                              'Bonding with ${device.name} has ${bonded ? 'succed' : 'failed'}.');
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text(
+                                "การจับคู่กับ ${device.name} ${bonded ? 'สำเร็จ' : 'ล้มเหลว'}"),
+                          ));
                         }
                         setState(() {
                           results[results.indexOf(result)] =

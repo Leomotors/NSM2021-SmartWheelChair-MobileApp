@@ -39,10 +39,8 @@ class _WaitForBluetoothPageState extends State<WaitForBluetoothPage> {
             ),
           );
         } else if (future.connectionState == ConnectionState.done) {
-          print("IT SUCCESS?");
           return DiscoveryPage();
         } else {
-          print("IT ACTUALLY FAILED");
           return DiscoveryPage();
         }
       },
