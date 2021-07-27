@@ -1,4 +1,4 @@
-package com.example.nsm2021_smartwheelchair_mobileapp
+package com.leomotorsth.nsm2021_smartwheelchair_mobileapp
 
 import io.flutter.embedding.android.FlutterActivity
 
