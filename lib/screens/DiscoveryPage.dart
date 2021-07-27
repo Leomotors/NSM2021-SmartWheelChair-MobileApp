@@ -1,3 +1,5 @@
+// * https://github.com/edufolly/flutter_bluetooth_serial/tree/master/example
+
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -103,7 +105,7 @@ class _DiscoveryPage extends State<DiscoveryPage> {
             child: Column(
               children: [
                 Text("จะแสดงเฉพาะอุปกรณ์ของรถเข็นเท่านั้น"),
-                Text("กดค้างเพื่อจับคู่ หรือ เลิกจับคู่"),
+                Text("กดเพื่อจับคู่ หรือ กดค้างเพื่อเลิกจับคู่"),
               ],
             ),
           ),
@@ -118,23 +120,15 @@ class _DiscoveryPage extends State<DiscoveryPage> {
                   return BluetoothDeviceListEntry(
                     device: device,
                     rssi: result.rssi,
-                    onTap: () {
-                      Navigator.of(context).pop(result.device);
-                    },
-                    onLongPress: () async {
+                    onTap: () async {
                       try {
                         bool bonded = false;
+                        // * If already bonded, exit
                         if (device.isBonded) {
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text("กำลังเลิกจับคู่ ${device.name}..."),
-                          ));
-                          await FlutterBluetoothSerial.instance
-                              .removeDeviceBondWithAddress(address);
-                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            content: Text(
-                                "เลิกจับคู่ ${device.name} สำเร็จ"),
-                          ));
-                        } else {
+                          return Navigator.of(context).pop(result.device);
+                        }
+                        // * Else pair and exit
+                        else {
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             content: Text("กำลังจับคู่ ${device.name}..."),
                           ));
@@ -144,6 +138,9 @@ class _DiscoveryPage extends State<DiscoveryPage> {
                             content: Text(
                                 "การจับคู่กับ ${device.name} ${bonded ? 'สำเร็จ' : 'ล้มเหลว'}"),
                           ));
+                          if (bonded) {
+                            Navigator.of(context).pop(result.device);
+                          }
                         }
                         setState(() {
                           results[results.indexOf(result)] =
@@ -164,6 +161,50 @@ class _DiscoveryPage extends State<DiscoveryPage> {
                           builder: (BuildContext context) {
                             return AlertDialog(
                               title: const Text('Error occured while bonding'),
+                              content: Text("${ex.toString()}"),
+                              actions: <Widget>[
+                                new TextButton(
+                                  child: new Text("Close"),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      }
+                    },
+                    onLongPress: () async {
+                      try {
+                        // * If is bonded, unbond
+                        if (device.isBonded) {
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text("กำลังเลิกจับคู่ ${device.name}..."),
+                          ));
+                          await FlutterBluetoothSerial.instance
+                              .removeDeviceBondWithAddress(address);
+                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            content: Text("เลิกจับคู่ ${device.name} สำเร็จ"),
+                          ));
+                        }
+                        setState(() {
+                          results[results.indexOf(result)] =
+                              BluetoothDiscoveryResult(
+                                  device: BluetoothDevice(
+                                    name: device.name ?? '',
+                                    address: address,
+                                    type: device.type,
+                                    bondState: BluetoothBondState.none,
+                                  ),
+                                  rssi: result.rssi);
+                        });
+                      } catch (ex) {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text('เกิดปัญหาขณะเลิกจับคู่'),
                               content: Text("${ex.toString()}"),
                               actions: <Widget>[
                                 new TextButton(
