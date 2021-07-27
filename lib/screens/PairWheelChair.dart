@@ -14,7 +14,15 @@ class _PairWheelChairPageState extends State<PairWheelChairPage> {
       appBar: AppBar(
         title: Text("จับคู่รถเข็น"),
       ),
-      body: Text("Hello World!"),
+      body: Center(
+        child: Text(
+          "To be implemented",
+          style: TextStyle(
+            fontSize: 26,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ),
     );
   }
 }

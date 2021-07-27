@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:nsm2021_smartwheelchair_mobileapp/constants/assets_path.dart';
 import 'package:nsm2021_smartwheelchair_mobileapp/screens/PairWheelChair.dart';
 import 'package:package_info/package_info.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 void main() {
   runApp(MyApp());
@@ -31,7 +30,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-  final String _sendToRickURL = "https://www.youtube.com/watch?v=j8PxqgliIno";
   String _appVersion = "Unable to load";
 
   @override
