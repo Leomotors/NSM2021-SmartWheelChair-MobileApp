@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:nsm2021_smartwheelchair_mobileapp/constants/assets_path.dart';
 
-class WheelChairMonitor extends StatefulWidget {
-  const WheelChairMonitor({Key? key}) : super(key: key);
+class WheelChairCtrl extends StatefulWidget {
+  const WheelChairCtrl({Key? key}) : super(key: key);
 
   @override
-  _WheelChairMonitorState createState() => _WheelChairMonitorState();
+  _WheelChairCtrlState createState() => _WheelChairCtrlState();
 }
 
-class _WheelChairMonitorState extends State<WheelChairMonitor> {
+class _WheelChairCtrlState extends State<WheelChairCtrl> {
   String _status = "ไม่ได้เชื่อมต่อ";
 
   @override
