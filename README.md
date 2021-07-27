@@ -1,9 +1,11 @@
 # NSM2021 Smart WheelChair Mobile App
 
-A new Flutter project.
+Mobile App Code for Smart Wheel Chair (NSM 2021)
+
+[Arduino Part](https://github.com/Leomotors/NSM2021-SmartWheelChair-Arduino)
 
 ## ⚙️ Compatibility
 
-✔️ Android (MinSdk: Android 4.1, TargetSdk: Android 11)
+✔️ Android (MinSdk: Android 5.0 Lollipop, TargetSdk: Android 11)
 
-❌ iOS
+❌ iOS : [flutter_bluetooth_serial](https://pub.dev/packages/flutter_bluetooth_serial) is not supported
