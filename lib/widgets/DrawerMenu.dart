@@ -31,7 +31,7 @@ class _DrawerMenuState extends State<DrawerMenu> {
       children: [
         DrawerHeader(
           child: Text(
-            "Settings",
+            "การตั้งค่า",
             style: TextStyle(
               fontSize: 30,
               fontWeight: FontWeight.bold,

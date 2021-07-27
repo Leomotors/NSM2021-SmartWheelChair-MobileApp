@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:nsm2021_smartwheelchair_mobileapp/constants/assets_path.dart';
 
-class WheelChairCtrl extends StatefulWidget {
-  const WheelChairCtrl({Key? key}) : super(key: key);
+class WheelChairCtrlPageBody extends StatefulWidget {
+  const WheelChairCtrlPageBody({Key? key}) : super(key: key);
 
   @override
-  _WheelChairCtrlState createState() => _WheelChairCtrlState();
+  _WheelChairCtrlPageBodyState createState() => _WheelChairCtrlPageBodyState();
 }
 
-class _WheelChairCtrlState extends State<WheelChairCtrl> {
-  String _status = "ไม่ได้เชื่อมต่อ";
+class _WheelChairCtrlPageBodyState extends State<WheelChairCtrlPageBody> {
+  String _statusDescribe = "ไม่ได้เชื่อมต่อ";
+  bool _paired = false;
 
   @override
   Widget build(BuildContext context) {
@@ -22,16 +23,35 @@ class _WheelChairCtrlState extends State<WheelChairCtrl> {
           ),
         ),
         Text(
-          "สถานะรถเข็น: " + _status,
+          "สถานะรถเข็น: " + _statusDescribe,
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
         ),
-        ElevatedButton(
+        SizedBox(height: 20),
+        ElevatedButton.icon(
           onPressed: () {
             setState(() {
-              _status = "กดปุ่มแล้ว";
+              _paired = !_paired;
+              _statusDescribe =
+                  _paired ? "จับคู่(ทิพย์)แล้ว" : "ไม่ได้เชื่อมต่อ";
             });
           },
-          child: Text("これがปุ่มだ"),
+          icon: Icon(_paired ? Icons.link_off : Icons.link),
+          label: Text(_paired ? "หยุดเชื่อมต่อ" : "จับคู่เลย!"),
+        ),
+        ElevatedButton.icon(
+          onPressed: () {},
+          icon: Icon(Icons.power_off),
+          label: Text("ปิดระบบรถเข็น"),
+        ),
+        SizedBox(height: 50),
+        ElevatedButton.icon(
+          onPressed: () {},
+          icon: Icon(Icons.add_alert),
+          label: Text(
+            "ขอความช่วยเหลือ",
+            style: TextStyle(fontSize: 22),
+          ),
+          style: ElevatedButton.styleFrom(primary: Colors.red[400]),
         ),
       ],
     );

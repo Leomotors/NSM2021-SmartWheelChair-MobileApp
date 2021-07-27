@@ -33,15 +33,13 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(
-          child: Text(
-            "Wheel Chair Controller",
-            style: TextStyle(fontSize: 18),
-          ),
+        title: Text(
+          "ตัวควบคุมรถเข็นไฟฟ้า",
+          style: TextStyle(fontSize: 18),
         ),
       ),
       drawer: DrawerMenu(),
-      body: WheelChairCtrl(),
+      body: WheelChairCtrlPageBody(),
     );
   }
 }
