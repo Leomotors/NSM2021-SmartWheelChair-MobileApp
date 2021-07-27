@@ -51,32 +51,54 @@ class _MyHomePageState extends State<MyHomePage> {
         title: Center(
           child: Text(
             "Wheel Chair Controller",
-            style: TextStyle(fontSize: 19),
+            style: TextStyle(fontSize: 18),
           ),
         ),
-        actions: [
-          IconButton(
-              onPressed: () {
-                showAboutDialog(
-                  context: context,
-                  applicationVersion: "เวอร์ชั่น " + _appVersion,
-                  applicationIcon: Image.asset(appLogoLocation, height: 40),
-                  children: [
-                    Text(
-                      "Made possible with",
-                      textAlign: TextAlign.center,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: FlutterLogo(
-                          style: FlutterLogoStyle.horizontal, size: 50),
-                    ),
-                  ],
-                );
-              },
-              icon: Icon(Icons.info)),
-        ],
       ),
+      drawer: Drawer(
+          child: ListView(
+        children: [
+          DrawerHeader(
+            child: Text(
+              "Settings",
+              style: TextStyle(
+                fontSize: 30,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            decoration: BoxDecoration(color: Colors.green),
+          ),
+          ListTile(
+            title: Text("เว้นไว้ให้ถาม"),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(color: Colors.grey, height: 2),
+          ),
+          ListTile(
+            title: Text("เกี่ยวกับแอป"),
+            leading: Icon(Icons.info),
+            onTap: () {
+              showAboutDialog(
+                context: context,
+                applicationVersion: "เวอร์ชั่น " + _appVersion,
+                applicationIcon: Image.asset(appLogoLocation, height: 40),
+                children: [
+                  Text(
+                    "Made possible with",
+                    textAlign: TextAlign.center,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: FlutterLogo(
+                        style: FlutterLogoStyle.horizontal, size: 50),
+                  ),
+                ],
+              );
+            },
+          ),
+        ],
+      )),
       body: Text("Nothing here"),
     );
   }
