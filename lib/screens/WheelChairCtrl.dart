@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nsm2021_smartwheelchair_mobileapp/constants/assets_path.dart';
+import 'package:nsm2021_smartwheelchair_mobileapp/screens/PairWheelChair.dart';
 
 class WheelChairCtrlPageBody extends StatefulWidget {
   const WheelChairCtrlPageBody({Key? key}) : super(key: key);
@@ -29,11 +30,14 @@ class _WheelChairCtrlPageBodyState extends State<WheelChairCtrlPageBody> {
         SizedBox(height: 20),
         ElevatedButton.icon(
           onPressed: () {
-            setState(() {
-              _paired = !_paired;
-              _statusDescribe =
-                  _paired ? "เชื่อมต่อทิพย์แล้ว" : "ไม่ได้เชื่อมต่อ";
-            });
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (BuildContext context) {
+                  return PairWheelChairPage();
+                },
+              ),
+            );
           },
           icon: Icon(_paired ? Icons.link_off : Icons.link),
           label: Text(_paired ? "หยุดเชื่อมต่อ" : "เชื่อมต่อเลย!"),
