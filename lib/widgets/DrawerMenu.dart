@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nsm2021_smartwheelchair_mobileapp/screens/WaitForBluetoothPage.dart';
+import 'package:nsm2021_smartwheelchair_mobileapp/screens/DiscoveryPage.dart';
 import 'package:nsm2021_smartwheelchair_mobileapp/utils/AboutDialog.dart';
 import 'package:package_info/package_info.dart';
 
@@ -48,7 +48,7 @@ class _DrawerMenuState extends State<DrawerMenu> {
               context,
               MaterialPageRoute(
                 builder: (BuildContext context) {
-                  return WaitForBluetoothPage();
+                  return DiscoveryPage();
                 },
               ),
             );
