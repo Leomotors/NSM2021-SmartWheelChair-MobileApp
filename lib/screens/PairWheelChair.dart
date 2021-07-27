@@ -15,12 +15,17 @@ class _PairWheelChairPageState extends State<PairWheelChairPage> {
         title: Text("จับคู่รถเข็น"),
       ),
       body: Center(
-        child: Text(
-          "To be implemented",
-          style: TextStyle(
-            fontSize: 26,
-            fontWeight: FontWeight.bold,
-          ),
+        child: Column(
+          children: [
+            CircularProgressIndicator(),
+            Text(
+              "กำลังค้นหา(ทิพย์)...",
+              style: TextStyle(
+                fontSize: 26,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ],
         ),
       ),
     );

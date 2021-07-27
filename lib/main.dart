@@ -2,6 +2,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:nsm2021_smartwheelchair_mobileapp/constants/assets_path.dart';
 import 'package:nsm2021_smartwheelchair_mobileapp/screens/PairWheelChair.dart';
+import 'package:nsm2021_smartwheelchair_mobileapp/screens/WheelChairMonitor.dart';
 import 'package:package_info/package_info.dart';
 
 void main() {
@@ -110,20 +111,7 @@ class _MyHomePageState extends State<MyHomePage> {
           ),
         ],
       )),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(24.0),
-            child: Center(
-              child: Image.asset(normalWheelChair, height: 150),
-            ),
-          ),
-          Text(
-            "สถานะรถเข็น: ตรวจไม่พบ",
-            style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-          ),
-        ],
-      ),
+      body: WheelChairMonitor(),
     );
   }
 }
