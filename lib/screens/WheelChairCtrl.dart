@@ -32,14 +32,14 @@ class _WheelChairCtrlPageBodyState extends State<WheelChairCtrlPageBody> {
             setState(() {
               _paired = !_paired;
               _statusDescribe =
-                  _paired ? "จับคู่(ทิพย์)แล้ว" : "ไม่ได้เชื่อมต่อ";
+                  _paired ? "เชื่อมต่อทิพย์แล้ว" : "ไม่ได้เชื่อมต่อ";
             });
           },
           icon: Icon(_paired ? Icons.link_off : Icons.link),
-          label: Text(_paired ? "หยุดเชื่อมต่อ" : "จับคู่เลย!"),
+          label: Text(_paired ? "หยุดเชื่อมต่อ" : "เชื่อมต่อเลย!"),
         ),
         ElevatedButton.icon(
-          onPressed: () {},
+          onPressed: _paired ? () {} : null,
           icon: Icon(Icons.power_off),
           label: Text("ปิดระบบรถเข็น"),
         ),

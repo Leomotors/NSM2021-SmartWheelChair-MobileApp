@@ -40,7 +40,7 @@ class _DrawerMenuState extends State<DrawerMenu> {
           decoration: BoxDecoration(color: Colors.green),
         ),
         ListTile(
-          title: Text("จับคู่รถเข็น"),
+          title: Text("ค้นหารถเข็น"),
           leading: Icon(Icons.search),
           onTap: () {
             Navigator.pop(context);
