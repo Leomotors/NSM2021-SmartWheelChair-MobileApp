@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:nsm2021_smartwheelchair_mobileapp/screens/PairWheelChair.dart';
+import 'package:nsm2021_smartwheelchair_mobileapp/screens/WaitForBluetoothPage.dart';
 import 'package:nsm2021_smartwheelchair_mobileapp/utils/AboutDialog.dart';
 import 'package:package_info/package_info.dart';
 
@@ -40,15 +40,15 @@ class _DrawerMenuState extends State<DrawerMenu> {
           decoration: BoxDecoration(color: Colors.green),
         ),
         ListTile(
-          title: Text("ค้นหารถเข็น"),
-          leading: Icon(Icons.search),
+          title: Text("เมนูจับคู่รถเข็น"),
+          leading: Icon(Icons.bluetooth),
           onTap: () {
             Navigator.pop(context);
             Navigator.push(
               context,
               MaterialPageRoute(
                 builder: (BuildContext context) {
-                  return PairWheelChairPage();
+                  return WaitForBluetoothPage();
                 },
               ),
             );

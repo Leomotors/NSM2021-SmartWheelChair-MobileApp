@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:nsm2021_smartwheelchair_mobileapp/constants/assets_path.dart';
-import 'package:nsm2021_smartwheelchair_mobileapp/screens/PairWheelChair.dart';
+import 'package:nsm2021_smartwheelchair_mobileapp/screens/WaitForBluetoothPage.dart';
 
 class WheelChairCtrlPageBody extends StatefulWidget {
   const WheelChairCtrlPageBody({Key? key}) : super(key: key);
@@ -34,13 +34,13 @@ class _WheelChairCtrlPageBodyState extends State<WheelChairCtrlPageBody> {
               context,
               MaterialPageRoute(
                 builder: (BuildContext context) {
-                  return PairWheelChairPage();
+                  return WaitForBluetoothPage();
                 },
               ),
             );
           },
-          icon: Icon(_paired ? Icons.link_off : Icons.link),
-          label: Text(_paired ? "หยุดเชื่อมต่อ" : "เชื่อมต่อเลย!"),
+          icon: Icon(_paired ? Icons.link_off : Icons.bluetooth),
+          label: Text(_paired ? "หยุดเชื่อมต่อ" : "เปิดเมนูจับคู่รถเข็น"),
         ),
         ElevatedButton.icon(
           onPressed: _paired ? () {} : null,

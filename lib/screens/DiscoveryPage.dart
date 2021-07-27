@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
+import 'package:nsm2021_smartwheelchair_mobileapp/constants/app_constants.dart';
 import 'package:nsm2021_smartwheelchair_mobileapp/widgets/BluetoothDeviceListEntry.dart';
 
 class DiscoveryPage extends StatefulWidget {
@@ -94,67 +95,87 @@ class _DiscoveryPage extends State<DiscoveryPage> {
                 )
         ],
       ),
-      body: ListView.builder(
-        itemCount: results.length,
-        itemBuilder: (BuildContext context, index) {
-          BluetoothDiscoveryResult result = results[index];
-          final device = result.device;
-          final address = device.address;
-          return BluetoothDeviceListEntry(
-            device: device,
-            rssi: result.rssi,
-            onTap: () {
-              Navigator.of(context).pop(result.device);
-            },
-            onLongPress: () async {
-              try {
-                bool bonded = false;
-                if (device.isBonded) {
-                  print('Unbonding from ${device.name}...');
-                  await FlutterBluetoothSerial.instance
-                      .removeDeviceBondWithAddress(address);
-                  print('Unbonding from ${device.name} has succed');
-                } else {
-                  print('Bonding with ${device.name}...');
-                  bonded = (await FlutterBluetoothSerial.instance
-                      .bondDeviceAtAddress(address))!;
-                  print(
-                      'Bonding with ${device.name} has ${bonded ? 'succed' : 'failed'}.');
-                }
-                setState(() {
-                  results[results.indexOf(result)] = BluetoothDiscoveryResult(
-                      device: BluetoothDevice(
-                        name: device.name ?? '',
-                        address: address,
-                        type: device.type,
-                        bondState: bonded
-                            ? BluetoothBondState.bonded
-                            : BluetoothBondState.none,
-                      ),
-                      rssi: result.rssi);
-                });
-              } catch (ex) {
-                showDialog(
-                  context: context,
-                  builder: (BuildContext context) {
-                    return AlertDialog(
-                      title: const Text('Error occured while bonding'),
-                      content: Text("${ex.toString()}"),
-                      actions: <Widget>[
-                        new TextButton(
-                          child: new Text("Close"),
-                          onPressed: () {
-                            Navigator.of(context).pop();
+      body: Column(
+        children: <Widget>[
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Column(
+              children: [
+                Text("จะแสดงเฉพาะอุปกรณ์ของรถเข็นเท่านั้น"),
+                Text("กดค้างเพื่อจับคู่ หรือ เลิกจับคู่"),
+              ],
+            ),
+          ),
+          Expanded(
+            child: ListView.builder(
+              itemCount: results.length,
+              itemBuilder: (BuildContext context, index) {
+                BluetoothDiscoveryResult result = results[index];
+                final device = result.device;
+                final address = device.address;
+                if (device.name?.contains(wheelChairBTModuleName) ?? false) {
+                  return BluetoothDeviceListEntry(
+                    device: device,
+                    rssi: result.rssi,
+                    onTap: () {
+                      Navigator.of(context).pop(result.device);
+                    },
+                    onLongPress: () async {
+                      try {
+                        bool bonded = false;
+                        if (device.isBonded) {
+                          print('Unbonding from ${device.name}...');
+                          await FlutterBluetoothSerial.instance
+                              .removeDeviceBondWithAddress(address);
+                          print('Unbonding from ${device.name} has succed');
+                        } else {
+                          print('Bonding with ${device.name}...');
+                          bonded = (await FlutterBluetoothSerial.instance
+                              .bondDeviceAtAddress(address))!;
+                          print(
+                              'Bonding with ${device.name} has ${bonded ? 'succed' : 'failed'}.');
+                        }
+                        setState(() {
+                          results[results.indexOf(result)] =
+                              BluetoothDiscoveryResult(
+                                  device: BluetoothDevice(
+                                    name: device.name ?? '',
+                                    address: address,
+                                    type: device.type,
+                                    bondState: bonded
+                                        ? BluetoothBondState.bonded
+                                        : BluetoothBondState.none,
+                                  ),
+                                  rssi: result.rssi);
+                        });
+                      } catch (ex) {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: const Text('Error occured while bonding'),
+                              content: Text("${ex.toString()}"),
+                              actions: <Widget>[
+                                new TextButton(
+                                  child: new Text("Close"),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
                           },
-                        ),
-                      ],
-                    );
-                  },
-                );
-              }
-            },
-          );
-        },
+                        );
+                      }
+                    },
+                  );
+                } else {
+                  return Container();
+                }
+              },
+            ),
+          ),
+        ],
       ),
     );
   }

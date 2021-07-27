@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:nsm2021_smartwheelchair_mobileapp/screens/DiscoveryPage.dart';
 
-class PairWheelChairPage extends StatefulWidget {
-  const PairWheelChairPage({Key? key}) : super(key: key);
+class WaitForBluetoothPage extends StatefulWidget {
+  const WaitForBluetoothPage({Key? key}) : super(key: key);
 
   @override
-  _PairWheelChairPageState createState() => _PairWheelChairPageState();
+  _WaitForBluetoothPageState createState() => _WaitForBluetoothPageState();
 }
 
-class _PairWheelChairPageState extends State<PairWheelChairPage> {
+class _WaitForBluetoothPageState extends State<WaitForBluetoothPage> {
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
