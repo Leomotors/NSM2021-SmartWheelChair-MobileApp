@@ -30,12 +30,9 @@ class _WheelChairCtrlPageBodyState extends State<WheelChairCtrlPageBody> {
 
   @override
   Widget build(BuildContext context) {
-    print("WheelChairCtrlPageBody's Build method called");
     return Consumer(
       builder:
           (BuildContext context, DeviceProvider deviceProvider, Widget? child) {
-        print("Consumer Method called");
-
         BluetoothDevice? data = deviceProvider.getData();
         _isBonded = data != null;
         _isConnected = (data?.isConnected ?? false);
