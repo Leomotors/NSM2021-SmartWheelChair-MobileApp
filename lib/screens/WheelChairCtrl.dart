@@ -64,7 +64,7 @@ class _WheelChairCtrlPageBodyState extends State<WheelChairCtrlPageBody> {
                 ? connectButton(context, data)
                 : Container(),
             // * Turn on Device Button
-            _isConnected ? turnOnButton() : Container(),
+            true ? turnOnButton() : Container(),
             // * Turn off Device Button
             _isConnected ? turnOffButton() : Container(),
             SizedBox(height: 50),
@@ -118,7 +118,7 @@ class _WheelChairCtrlPageBodyState extends State<WheelChairCtrlPageBody> {
     return ElevatedButton.icon(
       onPressed: () {
         Provider.of<BTProvider>(context, listen: false)
-            .sendMessage("Hello Test");
+            .sendMessage("Hello World");
       },
       icon: Icon(Icons.vpn_key),
       label: Text("เปิดใช้งานรถเข็น"),

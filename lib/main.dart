@@ -11,7 +11,7 @@ void main() {
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp])
       .then((_) {
-    runApp(new MyApp());
+    runApp(MyApp());
   });
 }
 
@@ -20,12 +20,12 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        Provider<DeviceProvider>(
+        ChangeNotifierProvider(
           create: (BuildContext context) {
             return DeviceProvider();
           },
         ),
-        Provider<BTProvider>(
+        ChangeNotifierProvider(
           create: (BuildContext context) {
             return BTProvider();
           },
