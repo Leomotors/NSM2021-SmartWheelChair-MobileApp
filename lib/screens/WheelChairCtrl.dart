@@ -3,6 +3,7 @@ import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:nsm2021_smartwheelchair_mobileapp/constants/assets_path.dart';
 import 'package:nsm2021_smartwheelchair_mobileapp/providers/DeviceProvider.dart';
 import 'package:nsm2021_smartwheelchair_mobileapp/screens/DiscoveryPage.dart';
+import 'package:nsm2021_smartwheelchair_mobileapp/utils/BTConnection.dart';
 import 'package:provider/provider.dart';
 
 class WheelChairCtrlPageBody extends StatefulWidget {
@@ -15,6 +16,7 @@ class WheelChairCtrlPageBody extends StatefulWidget {
 class _WheelChairCtrlPageBodyState extends State<WheelChairCtrlPageBody> {
   bool _isBonded = false;
   bool _isConnected = false;
+  BTConnection connection = BTConnection();
 
   String statusDescribe() {
     if (!_isBonded)
@@ -57,7 +59,9 @@ class _WheelChairCtrlPageBodyState extends State<WheelChairCtrlPageBody> {
             // * Open BT Menu Button
             !_isBonded ? openBTMenuButton() : Container(),
             // * Connect Button
-            (_isBonded && !_isConnected) ? connectButton() : Container(),
+            (_isBonded && !_isConnected && data != null)
+                ? connectButton(context, data)
+                : Container(),
             // * Turn on Device Button
             turnOnButton(),
             // * Turn off Device Button
@@ -95,9 +99,14 @@ class _WheelChairCtrlPageBodyState extends State<WheelChairCtrlPageBody> {
     );
   }
 
-  Widget connectButton() {
+  Widget connectButton(BuildContext context, BluetoothDevice device) {
     return ElevatedButton.icon(
-      onPressed: _isBonded ? () {} : null,
+      onPressed: _isConnected
+          ? () {}
+          : () {
+              connection.connect(
+                  address: device.address, feedbackContext: context);
+            },
       icon: Icon(_isConnected ? Icons.wifi_off : Icons.wifi),
       label: Text(_isConnected ? "หยุดเชื่อมต่อ" : "เชื่อมต่อรถเข็น"),
     );

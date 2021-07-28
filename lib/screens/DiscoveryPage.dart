@@ -67,7 +67,7 @@ class _DiscoveryPage extends State<DiscoveryPage> {
           isDiscovering = false;
         });
       });
-    } on PlatformException catch (ex) {
+    } on PlatformException catch (_) {
       showDialog(
           barrierDismissible: false,
           context: context,
