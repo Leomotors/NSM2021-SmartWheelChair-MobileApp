@@ -83,7 +83,7 @@ class BTProvider with ChangeNotifier {
 
   void sendMessage(String text) async {
     text = text.trim();
-
+    
     if (connection == null) return;
 
     if (text.length > 0) {

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:nsm2021_smartwheelchair_mobileapp/providers/BTProvider.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:provider/provider.dart';
 
 class PinCodeFieldPage extends StatefulWidget {
   const PinCodeFieldPage({Key? key}) : super(key: key);
@@ -32,6 +34,10 @@ class _PinCodeFieldPageState extends State<PinCodeFieldPage> {
             ),
             onChanged: (value) {
               print(value);
+            },
+            onCompleted: (value){
+              Provider.of<BTProvider>(context, listen:false).sendMessage(value);
+              Navigator.of(context).pop();
             },
           ),
         ],
