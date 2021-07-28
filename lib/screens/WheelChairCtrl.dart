@@ -66,6 +66,7 @@ class _WheelChairCtrlPageBodyState extends State<WheelChairCtrlPageBody> {
                 ? connectButton(context, data)
                 : Container(),
             // * Turn on Device Button
+            // ! TEMPORARY
             true ? turnOnButton() : Container(),
             // * Turn off Device Button
             _isConnected ? turnOffButton() : Container(),
