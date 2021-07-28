@@ -29,60 +29,65 @@ class _WheelChairCtrlPageBodyState extends State<WheelChairCtrlPageBody> {
   @override
   Widget build(BuildContext context) {
     print("WheelChairCtrlPageBody's Build method called");
-    return Consumer2<DeviceProvider, BTProvider>(
-      builder: (BuildContext context, DeviceProvider deviceProvider,
-          BTProvider btProvider, Widget? child) {
+    return Consumer(
+      builder:
+          (BuildContext context, DeviceProvider deviceProvider, Widget? child) {
         print("Consumer Method called");
-        _isConnected = btProvider.getConnectionStatus();
+
         BluetoothDevice? data = deviceProvider.getData();
         _isBonded = data != null;
         _isConnected = (data?.isConnected ?? false);
 
-        return Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(24.0),
-              child: Center(
-                child: Image.asset(normalWheelChair, height: 150),
+        return Consumer(builder:
+            (BuildContext context, BTProvider btProvider, Widget? child) {
+          _isConnected = btProvider.getConnectionStatus();
+          return Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(24.0),
+                child: Center(
+                  child: Image.asset(normalWheelChair, height: 150),
+                ),
               ),
-            ),
-            Text(
-              "สถานะรถเข็น: " + statusDescribe(),
-              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
-            ),
-            data == null
-                ? Container()
-                : Column(
-                    children: [
-                      Text("ชื่ออุปกรณ์: ${data.name ?? "เกิดข้อผิดพลาดขึ้น"}"),
-                      Text("ที่อยู่อุปกรณ์: ${data.address}"),
-                    ],
-                  ),
-            SizedBox(height: 20),
-            // * Open BT Menu Button
-            !_isBonded ? openBTMenuButton() : Container(),
-            // * Connect Button
-            (_isBonded && !_isConnected && data != null)
-                ? connectButton(context, data)
-                : Container(),
-            // * Turn on Device Button
-            // ! TEMPORARY
-            true ? turnOnButton() : Container(),
-            // * Turn off Device Button
-            _isConnected ? turnOffButton() : Container(),
-            SizedBox(height: 50),
-            ElevatedButton.icon(
-              onPressed: () {},
-              icon: Icon(Icons.add_alert),
-              label: Text(
-                "ขอความช่วยเหลือ",
-                style: TextStyle(fontSize: 22),
+              Text(
+                "สถานะรถเข็น: " + statusDescribe(),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
               ),
-              style: ElevatedButton.styleFrom(primary: Colors.red[400]),
-            ),
-            Text(btProvider.getData()),
-          ],
-        );
+              data == null
+                  ? Container()
+                  : Column(
+                      children: [
+                        Text(
+                            "ชื่ออุปกรณ์: ${data.name ?? "เกิดข้อผิดพลาดขึ้น"}"),
+                        Text("ที่อยู่อุปกรณ์: ${data.address}"),
+                      ],
+                    ),
+              SizedBox(height: 20),
+              // * Open BT Menu Button
+              !_isBonded ? openBTMenuButton() : Container(),
+              // * Connect Button
+              (_isBonded && !_isConnected && data != null)
+                  ? connectButton(context, data)
+                  : Container(),
+              // * Turn on Device Button
+              // ! TEMPORARY
+              true ? turnOnButton() : Container(),
+              // * Turn off Device Button
+              _isConnected ? turnOffButton() : Container(),
+              SizedBox(height: 50),
+              ElevatedButton.icon(
+                onPressed: () {},
+                icon: Icon(Icons.add_alert),
+                label: Text(
+                  "ขอความช่วยเหลือ",
+                  style: TextStyle(fontSize: 22),
+                ),
+                style: ElevatedButton.styleFrom(primary: Colors.red[400]),
+              ),
+              Text(btProvider.getData()),
+            ],
+          );
+        });
       },
     );
   }
