@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:nsm2021_smartwheelchair_mobileapp/constants/assets_path.dart';
+import 'package:nsm2021_smartwheelchair_mobileapp/providers/BTProvider.dart';
 import 'package:nsm2021_smartwheelchair_mobileapp/providers/DeviceProvider.dart';
 import 'package:nsm2021_smartwheelchair_mobileapp/screens/DiscoveryPage.dart';
-import 'package:nsm2021_smartwheelchair_mobileapp/utils/BTConnection.dart';
 import 'package:provider/provider.dart';
 
 class WheelChairCtrlPageBody extends StatefulWidget {
@@ -16,7 +16,6 @@ class WheelChairCtrlPageBody extends StatefulWidget {
 class _WheelChairCtrlPageBodyState extends State<WheelChairCtrlPageBody> {
   bool _isBonded = false;
   bool _isConnected = false;
-  BTConnection connection = BTConnection();
 
   String statusDescribe() {
     if (!_isBonded)
@@ -29,9 +28,10 @@ class _WheelChairCtrlPageBodyState extends State<WheelChairCtrlPageBody> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer(
-      builder: (BuildContext context, DeviceProvider provider, Widget? child) {
-        BluetoothDevice? data = provider.getData();
+    return Consumer2<DeviceProvider, BTProvider>(
+      builder: (BuildContext context, DeviceProvider deviceProvider,
+          BTProvider btProvider, Widget? child) {
+        BluetoothDevice? data = deviceProvider.getData();
         _isBonded = data != null;
         _isConnected = (data?.isConnected ?? false);
 
@@ -75,7 +75,8 @@ class _WheelChairCtrlPageBodyState extends State<WheelChairCtrlPageBody> {
                 style: TextStyle(fontSize: 22),
               ),
               style: ElevatedButton.styleFrom(primary: Colors.red[400]),
-            )
+            ),
+            Text(btProvider.getData()),
           ],
         );
       },
@@ -104,8 +105,7 @@ class _WheelChairCtrlPageBodyState extends State<WheelChairCtrlPageBody> {
       onPressed: _isConnected
           ? () {}
           : () {
-              connection.connect(
-                  address: device.address, feedbackContext: context);
+              // TODO CONNECT FUNCTION
             },
       icon: Icon(_isConnected ? Icons.wifi_off : Icons.wifi),
       label: Text(_isConnected ? "หยุดเชื่อมต่อ" : "เชื่อมต่อรถเข็น"),
