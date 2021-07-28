@@ -18,7 +18,7 @@ class _WheelChairCtrlPageBodyState extends State<WheelChairCtrlPageBody> {
 
   String statusDescribe() {
     if (!_isBonded)
-      return "ยังไม่ได้จับคู่";
+      return "ตรวจไม่พบ";
     else if (!_isConnected)
       return "ยังไม่ได้เชื่อมต่อ";
     else

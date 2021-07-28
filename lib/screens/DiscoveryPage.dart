@@ -3,6 +3,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:nsm2021_smartwheelchair_mobileapp/constants/app_constants.dart';
 import 'package:nsm2021_smartwheelchair_mobileapp/providers/DeviceProvider.dart';
@@ -48,23 +49,43 @@ class _DiscoveryPage extends State<DiscoveryPage> {
 
   void _startDiscovery() {
     FlutterBluetoothSerial.instance.requestEnable();
-    _streamSubscription =
-        FlutterBluetoothSerial.instance.startDiscovery().listen((r) {
-      setState(() {
-        final existingIndex = results.indexWhere(
-            (element) => element.device.address == r.device.address);
-        if (existingIndex >= 0)
-          results[existingIndex] = r;
-        else
-          results.add(r);
+    try {
+      _streamSubscription =
+          FlutterBluetoothSerial.instance.startDiscovery().listen((r) {
+        setState(() {
+          final existingIndex = results.indexWhere(
+              (element) => element.device.address == r.device.address);
+          if (existingIndex >= 0)
+            results[existingIndex] = r;
+          else
+            results.add(r);
+        });
       });
-    });
 
-    _streamSubscription!.onDone(() {
-      setState(() {
-        isDiscovering = false;
+      _streamSubscription!.onDone(() {
+        setState(() {
+          isDiscovering = false;
+        });
       });
-    });
+    } on PlatformException catch (ex) {
+      showDialog(
+          barrierDismissible: false,
+          context: context,
+          builder: (BuildContext context) {
+            return AlertDialog(
+              title: Text("เกิดข้อผิดพลาดขึ้น"),
+              content: Text("กรุณาอนุญาตให้เขาถึงตำแหน่งที่ตั้ง"),
+              actions: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text("รับทราบ"),
+                ),
+              ],
+            );
+          });
+    }
   }
 
   // @TODO . One day there should be `_pairDevice` on long tap on something... ;)
@@ -193,6 +214,7 @@ class _DiscoveryPage extends State<DiscoveryPage> {
                           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             content: Text("เลิกจับคู่ ${device.name} สำเร็จ"),
                           ));
+                          provideDataToProvider(null);
                         }
                         setState(() {
                           results[results.indexOf(result)] =
@@ -237,8 +259,9 @@ class _DiscoveryPage extends State<DiscoveryPage> {
     );
   }
 
-  void provideDataToProvider(BluetoothDevice data) {
-    DeviceProvider provider = Provider.of<DeviceProvider>(context, listen:false);
+  void provideDataToProvider(BluetoothDevice? data) {
+    DeviceProvider provider =
+        Provider.of<DeviceProvider>(context, listen: false);
     provider.setData(data);
   }
 }
