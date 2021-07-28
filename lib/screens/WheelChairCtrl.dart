@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:nsm2021_smartwheelchair_mobileapp/constants/assets_path.dart';
+import 'package:nsm2021_smartwheelchair_mobileapp/providers/DeviceProvider.dart';
 import 'package:nsm2021_smartwheelchair_mobileapp/screens/DiscoveryPage.dart';
+import 'package:provider/provider.dart';
 
 class WheelChairCtrlPageBody extends StatefulWidget {
   const WheelChairCtrlPageBody({Key? key}) : super(key: key);
@@ -26,6 +29,24 @@ class _WheelChairCtrlPageBodyState extends State<WheelChairCtrlPageBody> {
         Text(
           "สถานะรถเข็น: " + _statusDescribe,
           style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+        ),
+        Consumer(
+          builder:
+              (BuildContext context, DeviceProvider provider, Widget? child) {
+            final BluetoothDevice? data = provider.getData();
+            if (data != null) {
+              return Column(
+                children: [
+                  Text("Device name: ${data.name ?? "IS_NULL"}"),
+                  Text("Device Address: ${data.address}"),
+                  Text("Device Type: ${data.type}"),
+                  Text("Connection State: ${data.isConnected}"),
+                ],
+              );
+            } else {
+              return Text("IT IS NULL");
+            }
+          },
         ),
         SizedBox(height: 20),
         ElevatedButton.icon(

@@ -116,6 +116,7 @@ class _DiscoveryPage extends State<DiscoveryPage> {
                 BluetoothDiscoveryResult result = results[index];
                 final device = result.device;
                 final address = device.address;
+                // * Only show device with BT Module Name
                 if (device.name?.contains(wheelChairBTModuleName) ?? false) {
                   return BluetoothDeviceListEntry(
                     device: device,

@@ -1,8 +1,10 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:nsm2021_smartwheelchair_mobileapp/providers/DeviceProvider.dart';
 import 'package:nsm2021_smartwheelchair_mobileapp/screens/WheelChairCtrl.dart';
 import 'package:nsm2021_smartwheelchair_mobileapp/widgets/DrawerMenu.dart';
+import 'package:provider/provider.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -15,12 +17,21 @@ void main() {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: "Smart Wheel Chair Controller",
-      home: MyHomePage(),
-      theme: ThemeData(
-        primarySwatch: Colors.yellow,
-        fontFamily: "Anakotmai",
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (BuildContext context) {
+            return DeviceProvider();
+          },
+        ),
+      ],
+      child: MaterialApp(
+        title: "Smart Wheel Chair Controller",
+        home: MyHomePage(),
+        theme: ThemeData(
+          primarySwatch: Colors.yellow,
+          fontFamily: "Anakotmai",
+        ),
       ),
     );
   }
