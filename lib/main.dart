@@ -20,14 +20,16 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(
+        Provider<DeviceProvider>(
           create: (BuildContext context) {
             return DeviceProvider();
           },
         ),
-        ChangeNotifierProvider(create: (BuildContext context) {
-          return BTProvider();
-        })
+        Provider<BTProvider>(
+          create: (BuildContext context) {
+            return BTProvider();
+          },
+        )
       ],
       child: MaterialApp(
         title: "Smart Wheel Chair Controller",

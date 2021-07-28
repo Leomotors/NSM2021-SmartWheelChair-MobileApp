@@ -31,6 +31,7 @@ class _WheelChairCtrlPageBodyState extends State<WheelChairCtrlPageBody> {
     return Consumer2<DeviceProvider, BTProvider>(
       builder: (BuildContext context, DeviceProvider deviceProvider,
           BTProvider btProvider, Widget? child) {
+        _isConnected = btProvider.getStatus();
         BluetoothDevice? data = deviceProvider.getData();
         _isBonded = data != null;
         _isConnected = (data?.isConnected ?? false);
@@ -63,7 +64,7 @@ class _WheelChairCtrlPageBodyState extends State<WheelChairCtrlPageBody> {
                 ? connectButton(context, data)
                 : Container(),
             // * Turn on Device Button
-            turnOnButton(),
+            _isConnected ? turnOnButton() : Container(),
             // * Turn off Device Button
             _isConnected ? turnOffButton() : Container(),
             SizedBox(height: 50),
@@ -105,7 +106,8 @@ class _WheelChairCtrlPageBodyState extends State<WheelChairCtrlPageBody> {
       onPressed: _isConnected
           ? () {}
           : () {
-              // TODO CONNECT FUNCTION
+              Provider.of<BTProvider>(context, listen: false)
+                  .connect(address: device.address, feedbackContext: context);
             },
       icon: Icon(_isConnected ? Icons.wifi_off : Icons.wifi),
       label: Text(_isConnected ? "หยุดเชื่อมต่อ" : "เชื่อมต่อรถเข็น"),
@@ -114,7 +116,10 @@ class _WheelChairCtrlPageBodyState extends State<WheelChairCtrlPageBody> {
 
   Widget turnOnButton() {
     return ElevatedButton.icon(
-      onPressed: () {},
+      onPressed: () {
+        Provider.of<BTProvider>(context, listen: false)
+            .sendMessage("Hello Test");
+      },
       icon: Icon(Icons.vpn_key),
       label: Text("เปิดใช้งานรถเข็น"),
     );
