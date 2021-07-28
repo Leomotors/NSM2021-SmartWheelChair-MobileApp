@@ -4,6 +4,7 @@ import 'package:nsm2021_smartwheelchair_mobileapp/constants/assets_path.dart';
 import 'package:nsm2021_smartwheelchair_mobileapp/providers/BTProvider.dart';
 import 'package:nsm2021_smartwheelchair_mobileapp/providers/DeviceProvider.dart';
 import 'package:nsm2021_smartwheelchair_mobileapp/screens/DiscoveryPage.dart';
+import 'package:nsm2021_smartwheelchair_mobileapp/screens/PinCodeField.dart';
 import 'package:provider/provider.dart';
 
 class WheelChairCtrlPageBody extends StatefulWidget {
@@ -16,6 +17,7 @@ class WheelChairCtrlPageBody extends StatefulWidget {
 class _WheelChairCtrlPageBodyState extends State<WheelChairCtrlPageBody> {
   bool _isBonded = false;
   bool _isConnected = false;
+  bool _isActivated = false;
 
   String statusDescribe() {
     if (!_isBonded)
@@ -70,10 +72,9 @@ class _WheelChairCtrlPageBodyState extends State<WheelChairCtrlPageBody> {
                   ? connectButton(context, data)
                   : Container(),
               // * Turn on Device Button
-              // ! TEMPORARY
-              true ? turnOnButton() : Container(),
+              _isConnected ? turnOnButton() : Container(),
               // * Turn off Device Button
-              _isConnected ? turnOffButton() : Container(),
+              _isActivated ? turnOffButton() : Container(),
               SizedBox(height: 50),
               ElevatedButton.icon(
                 onPressed: () {},
@@ -127,7 +128,15 @@ class _WheelChairCtrlPageBodyState extends State<WheelChairCtrlPageBody> {
   Widget turnOnButton() {
     return ElevatedButton.icon(
       onPressed: () {
-        Provider.of<BTProvider>(context, listen: false).sendMessage("123456");
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) {
+              return PinCodeFieldPage();
+            },
+          ),
+        );
+        //Provider.of<BTProvider>(context, listen: false).sendMessage("123456");
       },
       icon: Icon(Icons.vpn_key),
       label: Text("เปิดใช้งานรถเข็น"),
