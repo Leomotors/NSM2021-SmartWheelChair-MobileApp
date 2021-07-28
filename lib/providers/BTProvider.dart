@@ -4,15 +4,13 @@ import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
+import 'package:provider/provider.dart';
 
 class BTProvider with ChangeNotifier {
   bool _connected = false;
+  bool _connectionInProgress = false;
   String lastInput = "";
   BluetoothConnection? connection;
-
-  void notifyConsumer() {
-    notifyListeners();
-  }
 
   void connect(
       {required String address, required BuildContext feedbackContext}) async {
@@ -27,8 +25,15 @@ class BTProvider with ChangeNotifier {
     //   ),
     // );
 
+    if (_connected || _connectionInProgress) {
+      print("Ignored Connection Request");
+      return;
+    }
+    _connectionInProgress = true;
+
     BluetoothConnection.toAddress(address).then((_connection) {
       connection = _connection;
+      _connectionInProgress = false;
 
       if (connection != null) {
         _connected = true;
@@ -36,7 +41,7 @@ class BTProvider with ChangeNotifier {
           content: Text("การเชื่อมต่อสำเร็จ"),
         ));
 
-        notifyConsumer();
+        notifyListeners();
         sendMessage("Hello World!");
 
         connection?.input?.listen((Uint8List data) {
@@ -44,7 +49,7 @@ class BTProvider with ChangeNotifier {
           print('Data incoming: $incoming');
           lastInput = incoming;
 
-          notifyConsumer();
+          notifyListeners();
           //connection.output.add(data); // Sending data
 
           if (incoming.contains('!')) {
@@ -53,7 +58,7 @@ class BTProvider with ChangeNotifier {
           }
         }).onDone(() {
           _connected = false;
-          notifyConsumer();
+          notifyListeners();
           print('Disconnected by remote request');
         });
       } else {
@@ -62,7 +67,14 @@ class BTProvider with ChangeNotifier {
     });
   }
 
-  bool getStatus() {
+  void disconnect() {
+    connection?.finish();
+    connection = null;
+    _connected = false;
+    notifyListeners();
+  }
+
+  bool getConnectionStatus() {
     return _connected;
   }
 

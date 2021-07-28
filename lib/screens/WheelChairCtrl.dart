@@ -28,10 +28,12 @@ class _WheelChairCtrlPageBodyState extends State<WheelChairCtrlPageBody> {
 
   @override
   Widget build(BuildContext context) {
+    print("WheelChairCtrlPageBody's Build method called");
     return Consumer2<DeviceProvider, BTProvider>(
       builder: (BuildContext context, DeviceProvider deviceProvider,
           BTProvider btProvider, Widget? child) {
-        _isConnected = btProvider.getStatus();
+        print("Consumer Method called");
+        _isConnected = btProvider.getConnectionStatus();
         BluetoothDevice? data = deviceProvider.getData();
         _isBonded = data != null;
         _isConnected = (data?.isConnected ?? false);
@@ -104,7 +106,9 @@ class _WheelChairCtrlPageBodyState extends State<WheelChairCtrlPageBody> {
   Widget connectButton(BuildContext context, BluetoothDevice device) {
     return ElevatedButton.icon(
       onPressed: _isConnected
-          ? () {}
+          ? () {
+              Provider.of<BTProvider>(context, listen: false).disconnect();
+            }
           : () {
               Provider.of<BTProvider>(context, listen: false)
                   .connect(address: device.address, feedbackContext: context);
@@ -117,8 +121,7 @@ class _WheelChairCtrlPageBodyState extends State<WheelChairCtrlPageBody> {
   Widget turnOnButton() {
     return ElevatedButton.icon(
       onPressed: () {
-        Provider.of<BTProvider>(context, listen: false)
-            .sendMessage("Hello World");
+        Provider.of<BTProvider>(context, listen: false).sendMessage("123456");
       },
       icon: Icon(Icons.vpn_key),
       label: Text("เปิดใช้งานรถเข็น"),
