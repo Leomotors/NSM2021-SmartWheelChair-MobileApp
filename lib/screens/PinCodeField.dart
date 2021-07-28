@@ -18,27 +18,33 @@ class _PinCodeFieldPageState extends State<PinCodeFieldPage> {
       body: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Text("กรุณาป้อนรหัสผ่าน"),
-          PinCodeTextField(
-            appContext: context,
-            length: 6,
-            obscureText: true,
-            useHapticFeedback: true,
-            hapticFeedbackTypes: HapticFeedbackTypes.heavy,
-            animationType: AnimationType.fade,
-            animationDuration: Duration(milliseconds: 150),
-            keyboardType: TextInputType.number,
-            pinTheme: PinTheme(
-              shape: PinCodeFieldShape.box,
-              inactiveColor: Colors.black,
+          Text("กรุณาป้อนรหัสผ่าน",
+              style: TextStyle(fontSize: 20, fontWeight: FontWeight.w500)),
+          Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: PinCodeTextField(
+              appContext: context,
+              length: 6,
+              obscureText: true,
+              useHapticFeedback: true,
+              hapticFeedbackTypes: HapticFeedbackTypes.heavy,
+              animationType: AnimationType.fade,
+              animationDuration: Duration(milliseconds: 150),
+              keyboardType: TextInputType.number,
+              autoFocus: true,
+              pinTheme: PinTheme(
+                shape: PinCodeFieldShape.box,
+                inactiveColor: Colors.black,
+              ),
+              onChanged: (value) {
+                print(value);
+              },
+              onCompleted: (value) {
+                Provider.of<BTProvider>(context, listen: false)
+                    .sendMessage(value);
+                Navigator.of(context).pop();
+              },
             ),
-            onChanged: (value) {
-              print(value);
-            },
-            onCompleted: (value){
-              Provider.of<BTProvider>(context, listen:false).sendMessage(value);
-              Navigator.of(context).pop();
-            },
           ),
         ],
       ),

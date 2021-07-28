@@ -30,40 +30,51 @@ class BTProvider with ChangeNotifier {
     }
     _connectionInProgress = true;
 
-    BluetoothConnection.toAddress(address).then((_connection) {
-      connection = _connection;
-      _connectionInProgress = false;
+    try {
+      BluetoothConnection.toAddress(address).then((_connection) {
+        connection = _connection;
+        _connectionInProgress = false;
 
-      if (connection != null) {
-        _connected = true;
-        ScaffoldMessenger.of(feedbackContext).showSnackBar(SnackBar(
-          content: Text("การเชื่อมต่อสำเร็จ"),
-        ));
-
-        notifyListeners();
-        sendMessage("Hello World!");
-
-        connection?.input?.listen((Uint8List data) {
-          String incoming = ascii.decode(data);
-          print('Data incoming: $incoming');
-          lastInput = incoming;
+        if (connection != null) {
+          _connected = true;
+          ScaffoldMessenger.of(feedbackContext).showSnackBar(SnackBar(
+            content: Text("การเชื่อมต่อสำเร็จ"),
+          ));
 
           notifyListeners();
-          //connection.output.add(data); // Sending data
+          sendMessage("Hello World!");
 
-          if (incoming.contains('!')) {
-            connection?.finish(); // Closing connection
-            print('Disconnecting by local host');
-          }
-        }).onDone(() {
-          _connected = false;
-          notifyListeners();
-          print('Disconnected by remote request');
-        });
-      } else {
-        print("Connection failed");
-      }
-    });
+          connection?.input?.listen((Uint8List data) {
+            String incoming = ascii.decode(data);
+            print('Data incoming: $incoming');
+            lastInput = incoming;
+
+            notifyListeners();
+            //connection.output.add(data); // Sending data
+
+            if (incoming.contains('!')) {
+              connection?.finish(); // Closing connection
+              print('Disconnecting by local host');
+            }
+          }).onDone(() {
+            _connected = false;
+            notifyListeners();
+            print('Disconnected by remote request');
+          });
+        } else {
+          print("Connection failed");
+        }
+      });
+    } catch (ex) {
+      showDialog(
+          context: feedbackContext,
+          builder: (_) {
+            return AlertDialog(
+              title: Text("Error"),
+              actions: [Text("Ok")],
+            );
+          });
+    }
   }
 
   void disconnect() {
@@ -83,7 +94,7 @@ class BTProvider with ChangeNotifier {
 
   void sendMessage(String text) async {
     text = text.trim();
-    
+
     if (connection == null) return;
 
     if (text.length > 0) {
