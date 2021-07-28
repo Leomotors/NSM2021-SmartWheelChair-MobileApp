@@ -21,14 +21,18 @@ class _PinCodeFieldPageState extends State<PinCodeFieldPage> {
             appContext: context,
             length: 6,
             obscureText: true,
+            useHapticFeedback: true,
+            hapticFeedbackTypes: HapticFeedbackTypes.heavy,
             animationType: AnimationType.fade,
-            animationDuration: Duration(milliseconds: 300),
+            animationDuration: Duration(milliseconds: 150),
+            keyboardType: TextInputType.number,
+            pinTheme: PinTheme(
+              shape: PinCodeFieldShape.box,
+              inactiveColor: Colors.black,
+            ),
             onChanged: (value) {
               print(value);
             },
-            pinTheme: PinTheme(
-              shape: PinCodeFieldShape.box,
-            ),
           ),
         ],
       ),
