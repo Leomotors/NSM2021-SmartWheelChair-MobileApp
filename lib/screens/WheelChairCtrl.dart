@@ -18,7 +18,7 @@ class _WheelChairCtrlPageBodyState extends State<WheelChairCtrlPageBody> {
 
   String statusDescribe() {
     if (!_isBonded)
-      return "ยังไม่ได้เลือกอุปกรณ์";
+      return "ยังไม่ได้จับคู่";
     else if (!_isConnected)
       return "ยังไม่ได้เชื่อมต่อ";
     else
@@ -30,7 +30,7 @@ class _WheelChairCtrlPageBodyState extends State<WheelChairCtrlPageBody> {
     return Consumer(
       builder: (BuildContext context, DeviceProvider provider, Widget? child) {
         BluetoothDevice? data = provider.getData();
-        _isBonded = (data?.bondState == BluetoothBondState.bonded);
+        _isBonded = data != null;
         _isConnected = (data?.isConnected ?? false);
 
         return Column(
@@ -49,41 +49,19 @@ class _WheelChairCtrlPageBodyState extends State<WheelChairCtrlPageBody> {
                 ? Container()
                 : Column(
                     children: [
-                      Text("Device name: ${data.name ?? "IS_NULL"}"),
-                      Text("Device Address: ${data.address}"),
-                      Text("Device Type: ${data.type}"),
-                      Text("Bond State: ${data.bondState}"),
-                      Text("Connection State: ${data.isConnected}"),
+                      Text("ชื่ออุปกรณ์: ${data.name ?? "เกิดข้อผิดพลาดขึ้น"}"),
+                      Text("ที่อยู่อุปกรณ์: ${data.address}"),
                     ],
                   ),
             SizedBox(height: 20),
-            ElevatedButton.icon(
-              onPressed: _isConnected
-                  ? null
-                  : () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (BuildContext context) {
-                            return DiscoveryPage();
-                          },
-                        ),
-                      );
-                    },
-              icon: _isConnected
-                  ? Icon(Icons.link_off)
-                  : Icon(_isBonded ? Icons.link_off : Icons.bluetooth),
-              label: Text(_isConnected
-                  ? "หยุดเชื่อมต่อ"
-                  : _isBonded
-                      ? "เลิกจับคู่"
-                      : "เปิดเมนูจับคู่รถเข็น"),
-            ),
-            ElevatedButton.icon(
-              onPressed: _isConnected ? () {} : null,
-              icon: Icon(Icons.power_off),
-              label: Text("ปิดระบบรถเข็น"),
-            ),
+            // * Open BT Menu Button
+            !_isBonded ? openBTMenuButton() : Container(),
+            // * Connect Button
+            (_isBonded && !_isConnected) ? connectButton() : Container(),
+            // * Turn on Device Button
+            turnOnButton(),
+            // * Turn off Device Button
+            _isConnected ? turnOffButton() : Container(),
             SizedBox(height: 50),
             ElevatedButton.icon(
               onPressed: () {},
@@ -93,10 +71,51 @@ class _WheelChairCtrlPageBodyState extends State<WheelChairCtrlPageBody> {
                 style: TextStyle(fontSize: 22),
               ),
               style: ElevatedButton.styleFrom(primary: Colors.red[400]),
-            ),
+            )
           ],
         );
       },
+    );
+  }
+
+  Widget openBTMenuButton() {
+    return ElevatedButton.icon(
+      onPressed: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (BuildContext context) {
+              return DiscoveryPage();
+            },
+          ),
+        );
+      },
+      icon: Icon(Icons.bluetooth),
+      label: Text("เปิดเมนูจับคู่รถเข็น"),
+    );
+  }
+
+  Widget connectButton() {
+    return ElevatedButton.icon(
+      onPressed: _isBonded ? () {} : null,
+      icon: Icon(_isConnected ? Icons.wifi_off : Icons.wifi),
+      label: Text(_isConnected ? "หยุดเชื่อมต่อ" : "เชื่อมต่อรถเข็น"),
+    );
+  }
+
+  Widget turnOnButton() {
+    return ElevatedButton.icon(
+      onPressed: () {},
+      icon: Icon(Icons.vpn_key),
+      label: Text("เปิดใช้งานรถเข็น"),
+    );
+  }
+
+  Widget turnOffButton() {
+    return ElevatedButton.icon(
+      onPressed: () {},
+      icon: Icon(Icons.power_off),
+      label: Text("ปิดระบบรถเข็น"),
     );
   }
 }
