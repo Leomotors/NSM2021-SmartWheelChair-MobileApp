@@ -7,4 +7,10 @@ class DeviceProvider with ChangeNotifier{
   BluetoothDevice? getData(){
     return _data;
   }
+
+  void setData(BluetoothDevice data)
+  {
+    _data = data;
+    notifyListeners();
+  }
 }

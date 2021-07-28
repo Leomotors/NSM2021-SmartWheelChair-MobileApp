@@ -5,7 +5,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:nsm2021_smartwheelchair_mobileapp/constants/app_constants.dart';
+import 'package:nsm2021_smartwheelchair_mobileapp/providers/DeviceProvider.dart';
 import 'package:nsm2021_smartwheelchair_mobileapp/widgets/BluetoothDeviceListEntry.dart';
+import 'package:provider/provider.dart';
 
 class DiscoveryPage extends StatefulWidget {
   /// If true, discovery starts on page start, otherwise user must press action button.
@@ -126,6 +128,7 @@ class _DiscoveryPage extends State<DiscoveryPage> {
                         bool bonded = false;
                         // * If already bonded, exit
                         if (device.isBonded) {
+                          provideDataToProvider(result.device);
                           return Navigator.of(context).pop(result.device);
                         }
                         // * Else pair and exit
@@ -140,6 +143,8 @@ class _DiscoveryPage extends State<DiscoveryPage> {
                                 "การจับคู่กับ ${device.name} ${bonded ? 'สำเร็จ' : 'ล้มเหลว'}"),
                           ));
                           if (bonded) {
+                            // * Bond Success
+                            provideDataToProvider(result.device);
                             Navigator.of(context).pop(result.device);
                           }
                         }
@@ -230,5 +235,10 @@ class _DiscoveryPage extends State<DiscoveryPage> {
         ],
       ),
     );
+  }
+
+  void provideDataToProvider(BluetoothDevice data) {
+    DeviceProvider provider = Provider.of<DeviceProvider>(context, listen:false);
+    provider.setData(data);
   }
 }
