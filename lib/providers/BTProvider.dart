@@ -11,6 +11,8 @@ class BTProvider with ChangeNotifier {
   String lastInput = "";
   BluetoothConnection? connection;
 
+  bool _isUserWhoDisconnect = false;
+
   bool get connected => _connected;
   bool get connectionInProgress => _connectionInProgress;
 
@@ -31,6 +33,7 @@ class BTProvider with ChangeNotifier {
       BluetoothConnection.toAddress(address).then((_connection) {
         connection = _connection;
         _connectionInProgress = false;
+        _isUserWhoDisconnect = false;
 
         if (connection != null) {
           _connected = true;
@@ -55,6 +58,25 @@ class BTProvider with ChangeNotifier {
             }
           }).onDone(() {
             _connected = false;
+            if (!_isUserWhoDisconnect)
+              showDialog(
+                context: feedbackContext,
+                builder: (BuildContext context) {
+                  return AlertDialog(
+                    title: Text("เกิดข้อผิดพลาด"),
+                    content: Text(
+                        "การเชื่อมต่อถูกตัด กรุณาลองเชื่อมต่อใหม่อีกครั้ง"),
+                    actions: [
+                      ElevatedButton(
+                        child: Text("รับทราบ"),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ],
+                  );
+                },
+              );
             notifyListeners();
             print('Disconnected by remote request');
           });
@@ -75,6 +97,7 @@ class BTProvider with ChangeNotifier {
   }
 
   void disconnect() {
+    _isUserWhoDisconnect = true;
     connection?.finish();
     connection = null;
     _connected = false;
