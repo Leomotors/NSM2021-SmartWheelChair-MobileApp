@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class BTProvider with ChangeNotifier {
   bool _connected = false;
@@ -48,7 +49,9 @@ class BTProvider with ChangeNotifier {
           notifyListeners();
           sendMessage("ID_QUERY");
 
-          connection?.input?.listen(_onDataRecieved).onDone(() {
+          connection?.input
+              ?.listen(_onDataRecieved(feedbackContext))
+              .onDone(() {
             _connected = false;
             _authenticated = false;
             lastInput = "";
@@ -90,22 +93,30 @@ class BTProvider with ChangeNotifier {
     }
   }
 
-  void _onDataRecieved(Uint8List data) {
-    String incoming = ascii.decode(data);
-    print('Data pocket: $incoming with size of ${incoming.length}');
+  dynamic _onDataRecieved(BuildContext context) {
+    return (Uint8List data) {
+      String incoming = ascii.decode(data);
+      print('Data pocket: $incoming with size of ${incoming.length}');
 
-    buffer += incoming;
-    if (buffer[buffer.length - 1] == '\n') {
-      lastInput = buffer.trim();
-      buffer = "";
-      print('Data Arrived: ${lastInput.replaceAll('\r', "")}');
-      _dataProcess(lastInput);
-      notifyListeners();
-    }
+      buffer += incoming;
+      if (buffer[buffer.length - 1] == '\n') {
+        lastInput = buffer.trim();
+        buffer = "";
+        print('Data Arrived: ${lastInput.replaceAll('\r', "")}');
+        _dataProcess(lastInput, context);
+        notifyListeners();
+      }
+    };
   }
 
-  void _dataProcess(String data) {
+  void _dataProcess(String data, BuildContext context) {
     if (data == "AUTH=SUCCESS") _authenticated = true;
+    if (data == "AUTH=FAILED") {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("รหัสผ่านไม่ถูกต้อง"),
+      ));
+      launch("https://www.youtube.com/watch?v=j8PxqgliIno");
+    }
   }
 
   void disconnect() {
