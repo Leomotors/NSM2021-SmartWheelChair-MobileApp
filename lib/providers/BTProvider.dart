@@ -8,6 +8,7 @@ import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 class BTProvider with ChangeNotifier {
   bool _connected = false;
   bool _connectionInProgress = false;
+  bool _authenticated = false;
   String lastInput = "";
   BluetoothConnection? connection;
 
@@ -15,6 +16,7 @@ class BTProvider with ChangeNotifier {
 
   bool get connected => _connected;
   bool get connectionInProgress => _connectionInProgress;
+  bool get authenticated => _authenticated;
 
   String buffer = "";
 
@@ -48,6 +50,7 @@ class BTProvider with ChangeNotifier {
 
           connection?.input?.listen(_onDataRecieved).onDone(() {
             _connected = false;
+            _authenticated = false;
             if (!_isUserWhoDisconnect)
               showDialog(
                 context: feedbackContext,
@@ -92,11 +95,16 @@ class BTProvider with ChangeNotifier {
 
     buffer += incoming;
     if (buffer[buffer.length - 1] == '\n') {
-      incoming = buffer.trim();
+      lastInput = buffer.trim();
       buffer = "";
-      print('Data Arrived: $buffer');
+      print('Data Arrived: ${lastInput.replaceAll('\r', "")}');
+      _dataProcess(lastInput);
       notifyListeners();
     }
+  }
+
+  void _dataProcess(String data) {
+    if (data == "AUTH=SUCCESS") _authenticated = true;
   }
 
   void disconnect() {
@@ -114,6 +122,7 @@ class BTProvider with ChangeNotifier {
 
     if (text.length > 0) {
       try {
+        print(ascii.encode(text + "\n"));
         connection?.output.add(ascii.encode(text + "\n"));
         await connection?.output.allSent;
       } catch (e) {

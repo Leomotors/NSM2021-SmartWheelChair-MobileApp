@@ -42,6 +42,7 @@ class _WheelChairCtrlPageBodyState extends State<WheelChairCtrlPageBody> {
             (BuildContext context, BTProvider btProvider, Widget? child) {
           _isConnected = btProvider.connected;
           _connectionInProgress = btProvider.connectionInProgress;
+          _isActivated = btProvider.authenticated;
 
           return Column(
             children: [
@@ -72,20 +73,24 @@ class _WheelChairCtrlPageBodyState extends State<WheelChairCtrlPageBody> {
                   ? connectButton(context, data)
                   : Container(),
               // * Turn on Device Button
-              _isConnected ? turnOnButton() : Container(),
+              (_isConnected && !_isActivated) ? turnOnButton() : Container(),
               // * Turn off Device Button
-              _isActivated ? turnOffButton() : Container(),
-              SizedBox(height: 50),
-              ElevatedButton.icon(
-                onPressed: () {},
-                icon: Icon(Icons.add_alert),
-                label: Text(
-                  "ขอความช่วยเหลือ",
-                  style: TextStyle(fontSize: 22),
-                ),
-                style: ElevatedButton.styleFrom(primary: Colors.red[400]),
-              ),
-              Text(btProvider.getData()),
+              _isActivated ? turnOffButton(btProvider) : Container(),
+              SizedBox(height: 30),
+              _isActivated
+                  ? ElevatedButton.icon(
+                      onPressed: () {
+                        Provider.of<BTProvider>(context, listen: false)
+                            .sendMessage("EMERGENCY");
+                      },
+                      icon: Icon(Icons.add_alert),
+                      label: Text(
+                        "ขอความช่วยเหลือ",
+                        style: TextStyle(fontSize: 22),
+                      ),
+                      style: ElevatedButton.styleFrom(primary: Colors.red[400]),
+                    )
+                  : Container(),
             ],
           );
         });
@@ -161,16 +166,43 @@ class _WheelChairCtrlPageBodyState extends State<WheelChairCtrlPageBody> {
             },
           ),
         );
-        //Provider.of<BTProvider>(context, listen: false).sendMessage("123456");
       },
       icon: Icon(Icons.vpn_key),
       label: Text("เปิดใช้งานรถเข็น"),
     );
   }
 
-  Widget turnOffButton() {
+  Widget turnOffButton(BTProvider btProvider) {
+    if (btProvider.lastInput == "EMERGENCY") {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (_) {
+            return Scaffold(
+              appBar: AppBar(
+                title: Text("EMERGENCY"),
+              ),
+              body: Center(
+                child: ElevatedButton.icon(
+                  icon: Icon(Icons.stop),
+                  label: Text("หยุด"),
+                  onPressed: () {
+                    Provider.of<BTProvider>(context, listen: false)
+                        .sendMessage("CANCEL_EMERGENCY");
+                    Navigator.pop(context);
+                  },
+                ),
+              ),
+            );
+          },
+        ),
+      );
+    }
     return ElevatedButton.icon(
-      onPressed: () {},
+      onPressed: () {
+        Provider.of<BTProvider>(context, listen: false)
+            .sendMessage("POWER_OFF");
+      },
       icon: Icon(Icons.power_off),
       label: Text("ปิดระบบรถเข็น"),
     );
