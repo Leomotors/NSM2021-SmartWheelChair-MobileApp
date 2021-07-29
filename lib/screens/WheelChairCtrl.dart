@@ -46,6 +46,7 @@ class _WheelChairCtrlPageBodyState extends State<WheelChairCtrlPageBody> {
           _isConnected = btProvider.connected;
           _connectionInProgress = btProvider.connectionInProgress;
           _isActivated = btProvider.authenticated;
+          String deviceID = btProvider.deviceID;
 
           if (btProvider.lastInput == "EMERGENCY") _emergencyActive = true;
 
@@ -68,6 +69,9 @@ class _WheelChairCtrlPageBodyState extends State<WheelChairCtrlPageBody> {
                         Text(
                             "ชื่ออุปกรณ์: ${data.name ?? "เกิดข้อผิดพลาดขึ้น"}"),
                         Text("ที่อยู่อุปกรณ์: ${data.address}"),
+                        deviceID != ""
+                            ? Text("หมายเลขอุปกรณ์: $deviceID")
+                            : Container(),
                       ],
                     ),
               SizedBox(height: 20),

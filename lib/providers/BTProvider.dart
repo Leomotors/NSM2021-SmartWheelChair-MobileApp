@@ -12,6 +12,7 @@ class BTProvider with ChangeNotifier {
   bool _authenticated = false;
   String lastInput = "";
   BluetoothConnection? connection;
+  String deviceID = "";
 
   bool _isUserWhoDisconnect = false;
 
@@ -116,6 +117,9 @@ class BTProvider with ChangeNotifier {
         content: Text("รหัสผ่านไม่ถูกต้อง"),
       ));
       launch("https://www.youtube.com/watch?v=j8PxqgliIno");
+    }
+    if (data.startsWith("DEVICEID=")) {
+      deviceID = data.replaceAll("DEVICEID=", "");
     }
   }
 
