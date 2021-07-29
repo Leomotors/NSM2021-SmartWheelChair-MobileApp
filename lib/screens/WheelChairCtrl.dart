@@ -66,7 +66,7 @@ class _WheelChairCtrlPageBodyState extends State<WheelChairCtrlPageBody> {
                     ),
               SizedBox(height: 20),
               // * Open BT Menu Button
-              !_isBonded ? openBTMenuButton() : Container(),
+              !_isConnected ? openBTMenuButton() : Container(),
               // * Connect Button
               (_isBonded && data != null)
                   ? connectButton(context, data)

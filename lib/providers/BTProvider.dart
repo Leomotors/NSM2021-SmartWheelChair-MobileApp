@@ -16,6 +16,8 @@ class BTProvider with ChangeNotifier {
   bool get connected => _connected;
   bool get connectionInProgress => _connectionInProgress;
 
+  String buffer = "";
+
   String getData() {
     return lastInput;
   }
@@ -42,21 +44,9 @@ class BTProvider with ChangeNotifier {
           ));
 
           notifyListeners();
-          sendMessage("Hello World!");
+          sendMessage("ID_QUERY");
 
-          connection?.input?.listen((Uint8List data) {
-            String incoming = ascii.decode(data);
-            print('Data incoming: $incoming');
-            lastInput = incoming;
-
-            notifyListeners();
-            //connection.output.add(data); // Sending data
-
-            if (incoming.contains('!')) {
-              connection?.finish(); // Closing connection
-              print('Disconnecting by local host');
-            }
-          }).onDone(() {
+          connection?.input?.listen(_onDataRecieved).onDone(() {
             _connected = false;
             if (!_isUserWhoDisconnect)
               showDialog(
@@ -93,6 +83,19 @@ class BTProvider with ChangeNotifier {
               actions: [Text("Ok")],
             );
           });
+    }
+  }
+
+  void _onDataRecieved(Uint8List data) {
+    String incoming = ascii.decode(data);
+    print('Data pocket: $incoming with size of ${incoming.length}');
+
+    buffer += incoming;
+    if (buffer[buffer.length - 1] == '\n') {
+      incoming = buffer.trim();
+      buffer = "";
+      print('Data Arrived: $buffer');
+      notifyListeners();
     }
   }
 
