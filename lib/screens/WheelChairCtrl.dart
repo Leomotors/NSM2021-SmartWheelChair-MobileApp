@@ -180,18 +180,21 @@ class _WheelChairCtrlPageBodyState extends State<WheelChairCtrlPageBody> {
           builder: (_) {
             return Scaffold(
               appBar: AppBar(
-                title: Text("EMERGENCY"),
+                title: Text("โหมดฉุกเฉิน"),
               ),
-              body: Center(
-                child: ElevatedButton.icon(
-                  icon: Icon(Icons.stop),
-                  label: Text("หยุด"),
-                  onPressed: () {
-                    Provider.of<BTProvider>(context, listen: false)
-                        .sendMessage("CANCEL_EMERGENCY");
-                    Navigator.pop(context);
-                  },
-                ),
+              body: Column(
+                children: [
+                  Text("โหมดฉุกเฉินกำลังทำงานอยู่"),
+                  ElevatedButton.icon(
+                    icon: Icon(Icons.stop),
+                    label: Text("หยุด"),
+                    onPressed: () {
+                      Provider.of<BTProvider>(context, listen: false)
+                          .sendMessage("CANCEL_EMERGENCY");
+                      Navigator.pop(context);
+                    },
+                  ),
+                ],
               ),
             );
           },
