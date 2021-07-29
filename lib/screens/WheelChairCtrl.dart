@@ -40,8 +40,8 @@ class _WheelChairCtrlPageBodyState extends State<WheelChairCtrlPageBody> {
 
         return Consumer(builder:
             (BuildContext context, BTProvider btProvider, Widget? child) {
-          _isConnected = btProvider.getConnectionStatus();
-          _connectionInProgress = btProvider.getConnectionInProgress();
+          _isConnected = btProvider.connected;
+          _connectionInProgress = btProvider.connectionInProgress;
 
           return Column(
             children: [

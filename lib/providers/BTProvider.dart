@@ -11,6 +11,13 @@ class BTProvider with ChangeNotifier {
   String lastInput = "";
   BluetoothConnection? connection;
 
+  bool get connected => _connected;
+  bool get connectionInProgress => _connectionInProgress;
+
+  String getData() {
+    return lastInput;
+  }
+
   void connect(
       {required String address, required BuildContext feedbackContext}) async {
     if (_connected || _connectionInProgress) {
@@ -72,18 +79,6 @@ class BTProvider with ChangeNotifier {
     connection = null;
     _connected = false;
     notifyListeners();
-  }
-
-  bool getConnectionInProgress() {
-    return _connectionInProgress;
-  }
-
-  bool getConnectionStatus() {
-    return _connected;
-  }
-
-  String getData() {
-    return lastInput;
   }
 
   void sendMessage(String text) async {
