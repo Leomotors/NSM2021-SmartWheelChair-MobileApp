@@ -13,22 +13,12 @@ class BTProvider with ChangeNotifier {
 
   void connect(
       {required String address, required BuildContext feedbackContext}) async {
-    // Navigator.push(
-    //   feedbackContext,
-    //   MaterialPageRoute(
-    //     builder: (context) {
-    //       return Scaffold(
-    //         appBar: AppBar(),
-    //       );
-    //     },
-    //   ),
-    // );
-
     if (_connected || _connectionInProgress) {
       print("Ignored Connection Request");
       return;
     }
     _connectionInProgress = true;
+    notifyListeners();
 
     try {
       BluetoothConnection.toAddress(address).then((_connection) {
@@ -82,6 +72,10 @@ class BTProvider with ChangeNotifier {
     connection = null;
     _connected = false;
     notifyListeners();
+  }
+
+  bool getConnectionInProgress() {
+    return _connectionInProgress;
   }
 
   bool getConnectionStatus() {

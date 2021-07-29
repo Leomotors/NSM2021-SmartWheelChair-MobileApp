@@ -18,6 +18,7 @@ class _WheelChairCtrlPageBodyState extends State<WheelChairCtrlPageBody> {
   bool _isBonded = false;
   bool _isConnected = false;
   bool _isActivated = false;
+  bool _connectionInProgress = false;
 
   String statusDescribe() {
     if (!_isBonded)
@@ -40,6 +41,8 @@ class _WheelChairCtrlPageBodyState extends State<WheelChairCtrlPageBody> {
         return Consumer(builder:
             (BuildContext context, BTProvider btProvider, Widget? child) {
           _isConnected = btProvider.getConnectionStatus();
+          _connectionInProgress = btProvider.getConnectionInProgress();
+
           return Column(
             children: [
               Padding(
@@ -117,7 +120,11 @@ class _WheelChairCtrlPageBodyState extends State<WheelChairCtrlPageBody> {
               Provider.of<BTProvider>(context, listen: false)
                   .connect(address: device.address, feedbackContext: context);
             },
-      icon: Icon(_isConnected ? Icons.wifi_off : Icons.wifi),
+      icon: Icon(_isConnected
+          ? Icons.wifi_off
+          : _connectionInProgress
+              ? Icons.refresh
+              : Icons.wifi),
       label: Text(_isConnected ? "หยุดเชื่อมต่อ" : "เชื่อมต่อรถเข็น"),
     );
   }
