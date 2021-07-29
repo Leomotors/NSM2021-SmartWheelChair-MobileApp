@@ -3,7 +3,6 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_bluetooth_serial/flutter_bluetooth_serial.dart';
 import 'package:nsm2021_smartwheelchair_mobileapp/constants/app_constants.dart';
 import 'package:nsm2021_smartwheelchair_mobileapp/providers/DeviceProvider.dart';
