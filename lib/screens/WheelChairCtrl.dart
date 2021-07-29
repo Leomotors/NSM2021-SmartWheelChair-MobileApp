@@ -68,7 +68,7 @@ class _WheelChairCtrlPageBodyState extends State<WheelChairCtrlPageBody> {
               // * Open BT Menu Button
               !_isBonded ? openBTMenuButton() : Container(),
               // * Connect Button
-              (_isBonded && !_isConnected && data != null)
+              (_isBonded && data != null)
                   ? connectButton(context, data)
                   : Container(),
               // * Turn on Device Button
@@ -111,22 +111,43 @@ class _WheelChairCtrlPageBodyState extends State<WheelChairCtrlPageBody> {
   }
 
   Widget connectButton(BuildContext context, BluetoothDevice device) {
-    return ElevatedButton.icon(
-      onPressed: _isConnected
-          ? () {
-              Provider.of<BTProvider>(context, listen: false).disconnect();
-            }
-          : () {
-              Provider.of<BTProvider>(context, listen: false)
-                  .connect(address: device.address, feedbackContext: context);
-            },
-      icon: Icon(_isConnected
-          ? Icons.wifi_off
-          : _connectionInProgress
-              ? Icons.refresh
-              : Icons.wifi),
-      label: Text(_isConnected ? "หยุดเชื่อมต่อ" : "เชื่อมต่อรถเข็น"),
-    );
+    var _onPressedFunc = _isConnected
+        ? () {
+            Provider.of<BTProvider>(context, listen: false).disconnect();
+          }
+        : () {
+            Provider.of<BTProvider>(context, listen: false)
+                .connect(address: device.address, feedbackContext: context);
+          };
+    if (!_isConnected && _connectionInProgress)
+      return ElevatedButton(
+        onPressed: null,
+        child: FittedBox(
+          child: Row(
+            children: [
+              SizedBox(
+                child: CircularProgressIndicator(),
+                height: 25,
+                width: 25,
+              ),
+              SizedBox(
+                width: 10,
+              ),
+              Text("กำลังเชื่อมต่อ..."),
+            ],
+          ),
+        ),
+      );
+    else
+      return ElevatedButton.icon(
+        onPressed: _onPressedFunc,
+        icon: Icon(_isConnected
+            ? Icons.wifi_off
+            : _connectionInProgress
+                ? Icons.refresh
+                : Icons.wifi),
+        label: Text(_isConnected ? "หยุดเชื่อมต่อ" : "เชื่อมต่อรถเข็น"),
+      );
   }
 
   Widget turnOnButton() {
