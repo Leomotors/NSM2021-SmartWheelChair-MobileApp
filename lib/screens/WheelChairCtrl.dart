@@ -26,8 +26,10 @@ class _WheelChairCtrlPageBodyState extends State<WheelChairCtrlPageBody> {
       return "ตรวจไม่พบ";
     else if (!_isConnected)
       return "ยังไม่ได้เชื่อมต่อ";
-    else
+    else if (!_isActivated)
       return "เชื่อมต่อแล้ว";
+    else
+      return "พร้อมใช้งาน";
   }
 
   @override
@@ -107,9 +109,11 @@ class _WheelChairCtrlPageBodyState extends State<WheelChairCtrlPageBody> {
 
   Widget connectButton(BuildContext context, BluetoothDevice device) {
     var _onPressedFunc = _isConnected
-        ? () {
-            Provider.of<BTProvider>(context, listen: false).disconnect();
-          }
+        ? _isActivated
+            ? null
+            : () {
+                Provider.of<BTProvider>(context, listen: false).disconnect();
+              }
         : () {
             Provider.of<BTProvider>(context, listen: false)
                 .connect(address: device.address, feedbackContext: context);
@@ -167,6 +171,8 @@ class _WheelChairCtrlPageBodyState extends State<WheelChairCtrlPageBody> {
       onPressed: () {
         BTProvider provider = Provider.of<BTProvider>(context, listen: false);
         provider.sendMessage("POWER_OFF");
+        Provider.of<DeviceProvider>(context, listen: false).setData(null);
+        _isBonded = false;
         provider.disconnect();
       },
       icon: Icon(Icons.power_off),

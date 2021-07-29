@@ -51,6 +51,7 @@ class BTProvider with ChangeNotifier {
           connection?.input?.listen(_onDataRecieved).onDone(() {
             _connected = false;
             _authenticated = false;
+            lastInput = "";
             if (!_isUserWhoDisconnect)
               showDialog(
                 context: feedbackContext,
