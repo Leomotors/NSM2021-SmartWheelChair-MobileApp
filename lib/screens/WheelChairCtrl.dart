@@ -19,6 +19,7 @@ class _WheelChairCtrlPageBodyState extends State<WheelChairCtrlPageBody> {
   bool _isConnected = false;
   bool _isActivated = false;
   bool _connectionInProgress = false;
+  bool _emergencyActive = false;
 
   String statusDescribe() {
     if (!_isBonded)
@@ -43,6 +44,8 @@ class _WheelChairCtrlPageBodyState extends State<WheelChairCtrlPageBody> {
           _isConnected = btProvider.connected;
           _connectionInProgress = btProvider.connectionInProgress;
           _isActivated = btProvider.authenticated;
+
+          if (btProvider.lastInput == "EMERGENCY") _emergencyActive = true;
 
           return Column(
             children: [
@@ -77,20 +80,7 @@ class _WheelChairCtrlPageBodyState extends State<WheelChairCtrlPageBody> {
               // * Turn off Device Button
               _isActivated ? turnOffButton(btProvider) : Container(),
               SizedBox(height: 30),
-              _isActivated
-                  ? ElevatedButton.icon(
-                      onPressed: () {
-                        Provider.of<BTProvider>(context, listen: false)
-                            .sendMessage("EMERGENCY");
-                      },
-                      icon: Icon(Icons.add_alert),
-                      label: Text(
-                        "ขอความช่วยเหลือ",
-                        style: TextStyle(fontSize: 22),
-                      ),
-                      style: ElevatedButton.styleFrom(primary: Colors.red[400]),
-                    )
-                  : Container(),
+              _isActivated ? emergencyButton() : Container(),
             ],
           );
         });
@@ -173,41 +163,50 @@ class _WheelChairCtrlPageBodyState extends State<WheelChairCtrlPageBody> {
   }
 
   Widget turnOffButton(BTProvider btProvider) {
-    if (btProvider.lastInput == "EMERGENCY") {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (_) {
-            return Scaffold(
-              appBar: AppBar(
-                title: Text("โหมดฉุกเฉิน"),
-              ),
-              body: Column(
-                children: [
-                  Text("โหมดฉุกเฉินกำลังทำงานอยู่"),
-                  ElevatedButton.icon(
-                    icon: Icon(Icons.stop),
-                    label: Text("หยุด"),
-                    onPressed: () {
-                      Provider.of<BTProvider>(context, listen: false)
-                          .sendMessage("CANCEL_EMERGENCY");
-                      Navigator.pop(context);
-                    },
-                  ),
-                ],
-              ),
-            );
-          },
-        ),
-      );
-    }
     return ElevatedButton.icon(
       onPressed: () {
-        Provider.of<BTProvider>(context, listen: false)
-            .sendMessage("POWER_OFF");
+        BTProvider provider = Provider.of<BTProvider>(context, listen: false);
+        provider.sendMessage("POWER_OFF");
+        provider.disconnect();
       },
       icon: Icon(Icons.power_off),
       label: Text("ปิดระบบรถเข็น"),
+    );
+  }
+
+  Widget emergencyButton() {
+    return Column(
+      children: [
+        _emergencyActive
+            ? Text(
+                "โหมดฉุกเฉินกำลังถูกเปิดใช้งานอยู่...",
+                style: TextStyle(
+                  color: Colors.red[400],
+                  fontWeight: FontWeight.w700,
+                  fontSize: 16,
+                ),
+              )
+            : Container(),
+        ElevatedButton.icon(
+          onPressed: _emergencyActive
+              ? () {
+                  Provider.of<BTProvider>(context, listen: false)
+                      .sendMessage("CANCEL_EMERGENCY");
+                  _emergencyActive = false;
+                }
+              : () {
+                  Provider.of<BTProvider>(context, listen: false)
+                      .sendMessage("EMERGENCY");
+                  _emergencyActive = true;
+                },
+          icon: Icon(_emergencyActive ? Icons.stop : Icons.add_alert),
+          label: Text(
+            _emergencyActive ? "หยุด" : "ขอความช่วยเหลือ",
+            style: TextStyle(fontSize: 22),
+          ),
+          style: ElevatedButton.styleFrom(primary: Colors.red[400]),
+        ),
+      ],
     );
   }
 }
