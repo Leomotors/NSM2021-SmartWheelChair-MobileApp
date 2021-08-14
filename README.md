@@ -1,6 +1,8 @@
 # NSM2021 Smart WheelChair Mobile App
 
-Mobile App Code for Smart Wheel Chair (NSM 2021)
+Mobile App Code for Smart Wheel Chair (In Part of NSM 2021 Qualification Round)
+
+Project Status: ***Approved but Didn't Advanced to Next Round***
 
 [Arduino Part](https://github.com/Leomotors/NSM2021-SmartWheelChair-Arduino)
 
